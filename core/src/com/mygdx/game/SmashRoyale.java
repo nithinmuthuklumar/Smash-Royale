@@ -12,9 +12,7 @@ import com.mygdx.game.Screens.BattleScreen;
 import com.mygdx.game.Screens.CharacterSelectionScreen;
 import com.mygdx.game.Screens.LoginScreen;
 import com.mygdx.game.Screens.MenuScreen;
-import com.mygdx.game.Sprites.Fighter;
-import com.mygdx.game.Sprites.Kirby;
-import com.mygdx.game.Sprites.Link;
+import com.mygdx.game.Sprites.*;
 
 import java.util.ArrayList;
 
@@ -42,8 +40,18 @@ public class SmashRoyale extends Game {
     @Override
     public void create () {
         fighters=new ArrayList<Fighter>();
-        fighters.add(new Link());
-        fighters.add(new Kirby());
+        Fighter link=new Fighter("Link","Icons/LinkIcon.png");
+        link.getForms().add(SwordLink.class);
+        link.getForms().add(BombLink.class);
+        link.getForms().add(GrassLink.class);
+        fighters.add(link);
+        Fighter kirby= new Fighter("Kirby","Icons/KirbyIcon.png");
+        kirby.getForms().add(FireKirby.class);
+        kirby.getForms().add(FlyingKirby.class);
+
+
+        fighters.add(kirby);
+
         usersDB=new UsersDB();
         camera=new OrthographicCamera();
         viewport=new FitViewport(screenW,screenH,camera);

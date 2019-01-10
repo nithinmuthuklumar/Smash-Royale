@@ -23,7 +23,6 @@ public class SwordLink extends Form {
             switch (getAction()){
                 case WALK: {
                     getPos().translate(getSpeed(),0);
-                    System.out.println(getAction());
                     break;
                 }
                 case ATTACK: {
