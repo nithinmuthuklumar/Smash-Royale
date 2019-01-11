@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class SwordLink extends Form {
     public static Texture icon=new Texture("Icons/sword.png");
-    private static int elixirCost=6;
+    private static int elixirCost = 5;
 
 
 
@@ -12,17 +12,18 @@ public class SwordLink extends Form {
     public SwordLink(int y,String dir){
         super(y,8,0.14f,dir,15,3000,20);
 
-        addAction("sprites/Link/sword/"+ dir,actions.ATTACK);
-        addAction("sprites/Link/run/"+dir,actions.WALK);
-        addAction("sprites/Link/death",actions.DEATH);
+        addState("sprites/Link/sword/" + dir, states.ATTACK);
+        addState("sprites/Link/run/" + dir, states.WALK);
+        addState("sprites/Link/death", states.DEATH);
     }
     @Override
-    public void update() {
+    public void act(float delta) {
+        super.act(delta);
         if(isNextFrame()){
 
-            switch (getAction()){
+            switch (getState()) {
                 case WALK: {
-                    getPos().translate(getSpeed(),0);
+                    moveBy(getSpeed(), 0);
                     break;
                 }
                 case ATTACK: {

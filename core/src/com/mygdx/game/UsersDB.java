@@ -18,6 +18,7 @@ public class UsersDB {
 
 
     }
+
     public boolean contains(String name){
         for(String s:entries){
             if(s.equals(name)){
@@ -34,11 +35,11 @@ public class UsersDB {
             BufferedWriter writer=new BufferedWriter(new FileWriter(path));
             writer.write(Integer.toString(entriesLength+1));
             for(String s:entries){
-                writer.append("\n"+s);
+                //faster than string concatenation
+                writer.append("\n").append(s);
 
             }
-
-            writer.append("\n"+name);
+            writer.append("\n").append(name);
             writer.close();
             setupReader();
         }catch (IOException e){

@@ -1,7 +1,7 @@
 package com.mygdx.game;
-import com.badlogic.gdx.Gdx;
+
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.game.Sprites.Fighter;
-import com.mygdx.game.Sprites.Form;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,12 +15,11 @@ public class Bot extends Player{
 
     }
     @Override
-    public void nextMove(ArrayList<Form> forms,Arena arena){
+    public void nextMove(Stage s, Arena arena) {
         //if enough elixir
         update();
         if(getElixir()>5){
-
-            forms.add(getChosen().createForm(0,arena.getStartY(rand.nextInt(arena.getNumLanes())),getDirection()));
+            s.addActor(getChosen().createForm(0, arena.getStartY(rand.nextInt(arena.getNumLanes())), getDirection()));
             useElixir(0);
 
         }

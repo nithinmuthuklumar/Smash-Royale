@@ -9,10 +9,12 @@ public class GrassLink extends Form {
     }
 
     @Override
-    public void update() {
+    public void act(float delta) {
+        super.act(delta);
         if(isNextFrame()){
-            switch (getAction()){
-                case WALK: getPos().translate(getSpeed(),0);
+            switch (getState()) {
+                case WALK:
+                    moveBy(getSpeed(), 0);
 
             }
 

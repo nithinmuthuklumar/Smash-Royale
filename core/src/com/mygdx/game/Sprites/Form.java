@@ -1,29 +1,22 @@
 package com.mygdx.game.Sprites;
 
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import static com.mygdx.game.SmashRoyale.screenH;
 import static com.mygdx.game.SmashRoyale.screenW;
 
-public class Form {
-    public enum actions{
-        WALK,ATTACK,DEATH
-    }
-
-    private HashMap<actions, Animation<Texture>> sprites;
-    private Point pos;
-    private actions action;
+public class Form extends Actor {
+    private HashMap<states, Animation<Texture>> sprites;
+    private states state;
     private float stateTime;
     private int speed;
     private float frameDuration;
@@ -33,10 +26,7 @@ public class Form {
     private Form target;
     private int dmg;
     private int hp;
-
-
     public Form(int y,int speed,float frameDuration,String dir,int range,int hp,int dmg){
-
         this.dir=dir;
         stateTime=0;
         this.frameDuration=frameDuration;
@@ -46,22 +36,15 @@ public class Form {
         this.dmg=dmg;
 
 
-
-
-        sprites=new HashMap<actions, Animation<Texture>>();
+        sprites = new HashMap<states, Animation<Texture>>();
         this.speed=dir.equals("right")?speed:-speed;
-        action=actions.WALK;
-        pos=new Point(getStartX(),y);
+        state = states.WALK;
+        setX(getStartX());
+        setY(y);
 
     }
-    private int getStartX(){
-        if(dir.equals("right")){
-            return 0;
-        }
-        return screenW;
 
-    }
-    public void addAction(String path,actions a){
+    public void addState(String path, states a) {
         File[] sortedFiles=new File(path).listFiles();
         Arrays.sort(sortedFiles, new Comparator<File>() {
             @Override
@@ -82,14 +65,68 @@ public class Form {
         getSprites().put(a, new Animation<Texture>(frameDuration,frames));
 
     }
-    public void update(){
+
+    private int getStartX() {
+        if (dir.equals("right")) {
+            return 0;
+        }
+        return screenW;
 
     }
-    public void draw(SpriteBatch batch){
 
-        stateTime+=Gdx.graphics.getDeltaTime();
-        batch.draw(sprites.get(action).getKeyFrame(stateTime,true),pos.x,pos.y);
+    @Override
+    public void act(float delta) {
 
+        //loop backwards so that the index isn't affected by removal
+        try {
+            for (int i = getStage().getActors().size - 1; i >= 0; i--) {
+                Form f = (Form) getStage().getActors().get(i);
+                if (!f.isAlive()) {
+                    System.out.println(true);
+                    //deathActions.add whatever will be here later
+                    f.remove();
+                    return;
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        //get a target if its possible
+
+        boolean change = false;
+        for (Actor a : getStage().getActors()) {
+            Form f = (Form) a;
+            //the earlier the form was added, the closer it is
+
+            if (this != f && getY() == f.getY() && inAttackRange(f) && !getDir().equals(f.getDir())) {
+                change = true;
+                setTarget(f);
+                break;
+            }
+
+        }
+        if (!change) {
+            advance();
+        }
+
+
+        stateTime += delta;
+        super.act(delta);
+
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+
+        batch.draw(sprites.get(state).getKeyFrame(stateTime, true), getX(), getY());
+    }
+
+    public boolean isNextFrame(){
+        boolean nextFrame = frameNumber != (int) (getstateTime() / getFrameDuration());
+        frameNumber=(int)(stateTime / frameDuration);
+        return nextFrame;
 
     }
 
@@ -97,42 +134,38 @@ public class Form {
         return dir;
     }
 
-    public boolean isNextFrame(){
-        boolean nextFrame=frameNumber!=(int)(getStateTime() / getFrameDuration());
-        frameNumber=(int)(stateTime / frameDuration);
-        return nextFrame;
-
-    }
-    public void advance(){
-        action=actions.WALK;
+    private void advance() {
+        state = states.WALK;
         target=null;
     }
-    public void attack(Form v){
-        action=actions.ATTACK;
+
+    private void setTarget(Form v) {
+        state = states.ATTACK;
         target=v;
     }
 
-    public HashMap<actions, Animation<Texture>> getSprites() {
+    public HashMap<states, Animation<Texture>> getSprites() {
         return sprites;
+    }
+
+    public float getstateTime() {
+        return stateTime;
     }
 
     public int getSpeed() {
         return speed;
     }
 
-    public Point getPos() {
-        return pos;
-    }
-    public float getStateTime(){
-        return stateTime;
+    public states getState() {
+        return state;
     }
 
     public float getFrameDuration() {
         return frameDuration;
     }
 
-    public actions getAction(){
-        return action;
+    public boolean inAttackRange(Form f) {
+        return Math.abs(f.getX() - getX()) <= range;
     }
     public static int getElixirCost(){
         return 0;
@@ -141,8 +174,9 @@ public class Form {
     public boolean isAlive(){
         return hp>0;
     }
-    public boolean inAttackRange(Form f){
-        return Math.abs(f.getPos().x-getPos().x)<=range;
+
+    public enum states {
+        WALK, ATTACK, DEATH
     }
     public void inflictDamage(){
         target.hp-=dmg;

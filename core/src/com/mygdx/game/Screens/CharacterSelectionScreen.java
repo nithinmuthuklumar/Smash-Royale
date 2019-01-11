@@ -1,6 +1,4 @@
 package com.mygdx.game.Screens;
-import java.math.*;
-import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -11,7 +9,10 @@ import com.mygdx.game.SmashRoyale;
 import com.mygdx.game.Sprites.Fighter;
 import com.mygdx.game.TxtButton;
 
-import static com.mygdx.game.SmashRoyale.*;
+import java.util.ArrayList;
+
+import static com.mygdx.game.SmashRoyale.screenH;
+import static com.mygdx.game.SmashRoyale.screenW;
 public class CharacterSelectionScreen implements Screen {
     private SmashRoyale game;
     private Stage stage;
@@ -73,10 +74,10 @@ public class CharacterSelectionScreen implements Screen {
         game.getBatch().begin();
         game.getBatch().draw(bkg,0,0,screenW,screenH);
         //need to draw icons for the different types
-        game.getBatch().draw(game.getPlayer().getChosen().getIcon(),screenW-200,screenH/2-75,
+        game.getBatch().draw(game.getPlayer().getChosen().getIcon(), screenW - 200, screenH / 2f - 75,
                 (game.getPlayer().getChosen().getIcon().getWidth()*0.5f),
                 (game.getPlayer().getChosen().getIcon().getWidth()*0.5f));
-        game.getBatch().draw(curFighter.getIcon(),screenW/2-150,screenH/2,curFighter.getIcon().getWidth(),curFighter.getIcon().getHeight());
+        game.getBatch().draw(curFighter.getIcon(), screenW / 2f - 150, screenH / 2f, curFighter.getIcon().getWidth(), curFighter.getIcon().getHeight());
         game.getBatch().end();
         stage.draw();
 
