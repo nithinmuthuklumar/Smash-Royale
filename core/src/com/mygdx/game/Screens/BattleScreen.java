@@ -40,31 +40,6 @@ public class BattleScreen extends InputAdapter implements Screen {
             }
 
         }
-
-        //looping backward so that if an item is deleted it does not mess up the index
-        /*for(int i = entities.getActors().size-1; i>=0; i--){
-            Form f= (Form)entities.getActors().get(i);
-            f.update();
-            if(f.getPos().x<0||f.getPos().x>screenW||!f.isAlive()){
-                entities.remove(i);
-            }
-        }*/
-        //instead of sorting to get closest enemy we take the first enemy in the proper lane since it was added in that order
-        /*
-        for(Form a: entities){
-            boolean change=false;
-            for(Form v: entities){
-                if(a!=v&&a.getPos().y==v.getPos().y&&a.inAttackRange(v)&&!a.getDir().equals(v.getDir())){
-                    change=true;
-                    a.attack(v);
-                }
-            }
-            if(!change){
-                a.advance();
-            }
-
-        }
-        */
     }
     @Override
     public void show(){
@@ -77,7 +52,6 @@ public class BattleScreen extends InputAdapter implements Screen {
         for(TxtButton t: formButtons){
             ui.addActor(t);
         }
-
     }
 
     @Override
