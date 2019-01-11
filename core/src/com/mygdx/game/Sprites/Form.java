@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -78,21 +79,23 @@ public class Form extends Actor {
     public void act(float delta) {
 
         //loop backwards so that the index isn't affected by removal
-        try {
+        if (state != states.DEATH) {
             //also try using Snapshot array stuff here
             for (int i = getStage().getActors().size - 1; i >= 0; i--) {
                 Form f = (Form) getStage().getActors().get(i);
                 if (!f.isAlive()) {
-                    System.out.println(true);
                     //deathActions.add whatever will be here later
+                    f.addAction(new DelayAction(6f));
+                    f.addAction(new DeathAction());
+                    f.frameNumber = 0;
+                    f.state = states.DEATH;
                     f.remove();
                     return;
 
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
+        } else {
+            super.act(delta);
         }
         //get a target if its possible
 
@@ -101,7 +104,7 @@ public class Form extends Actor {
             Form f = (Form) a;
             //the earlier the form was added, the closer it is
 
-            if (this != f && getY() == f.getY() && inAttackRange(f) && !getDir().equals(f.getDir())) {
+            if (this != f && getY() == f.getY() && inAttackRange(f) && !getDir().equals(f.getDir()) && f.state != states.DEATH) {
                 change = true;
                 setTarget(f);
                 break;
@@ -114,7 +117,7 @@ public class Form extends Actor {
 
 
         stateTime += delta;
-        super.act(delta);
+
 
     }
 
