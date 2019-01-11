@@ -63,3 +63,6 @@ maybe create a Pygame sprite class?
 give time for death tomorrow
 more precise animation speed; each action should have it's own suitable speed
 have an even higher level interface for weapons as well
+Why is snapshot array used so prevalently in the libgdx things
+what is parentAlpha for
+death Action class that extends action would be useful;

@@ -1,11 +1,10 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.game.Sprites.Fighter;
-import com.mygdx.game.Sprites.Form;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 
 public class Player {
     private String name;
@@ -36,7 +35,8 @@ public class Player {
     public void setChosen(Fighter f){
         chosen=f;
     }
-    public void nextMove(ArrayList<Form> forms,Arena arena){
+
+    public void nextMove(Stage forms, Arena arena) {
 
     }
     public void update(){

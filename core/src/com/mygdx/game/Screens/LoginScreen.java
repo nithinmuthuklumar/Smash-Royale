@@ -1,16 +1,13 @@
 package com.mygdx.game.Screens;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.mygdx.game.*;
-
-import java.io.IOException;
-import java.security.GeneralSecurityException;
+import com.mygdx.game.Player;
+import com.mygdx.game.SmashRoyale;
+import com.mygdx.game.TxtButton;
 
 import static com.mygdx.game.SmashRoyale.screenH;
 import static com.mygdx.game.SmashRoyale.screenW;
@@ -24,7 +21,6 @@ public class LoginScreen implements Screen {
     private TxtButton confirmBtn;
     private TxtButton backBtn;
     private TextField nameField;
-    private boolean typing;
     private Stage stage;
     private Texture title;
     private State state=State.MENU;
@@ -43,7 +39,7 @@ public class LoginScreen implements Screen {
         confirmBtn=new TxtButton("text/confirm.png",game.getStyle(),500,300);
         stage=new Stage(game.getViewport());
         nameField=new TextField("",game.getStyle());
-        nameField.setPosition(screenW/2,screenH/2);
+        nameField.setPosition(screenW / 2f, screenH / 2f);
         backBtn=new TxtButton("Icons/back.png",game.getStyle(),50,screenH-100);
 
         nameField.setTextFieldFilter(new TextField.TextFieldFilter() {
@@ -52,12 +48,6 @@ public class LoginScreen implements Screen {
                 return Character.isLetter(c);
             }
         });
-        stage.getRoot().addCaptureListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                if (!(event.getTarget() instanceof TextField)) stage.setKeyboardFocus(null);
-                return false;
-            }
-        });//needs to be placed after clear as well
         nameField.setMessageText("Username");
 
 
@@ -92,7 +82,7 @@ public class LoginScreen implements Screen {
         }
         if(confirmBtn.getClicked()){
             String name=nameField.getText();
-            nameField.clearSelection();
+
             if(name.length()==0){
                 return;
             }
@@ -120,6 +110,7 @@ public class LoginScreen implements Screen {
             stage.clear();
             stage.addActor(loginBtn);
             stage.addActor(newProfileBtn);
+            nameField.clearSelection();
         }
     }
     @Override
